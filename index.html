@@ -1,0 +1,103 @@
+<html>
+
+<head>
+  <style type="text/css">
+    #sphere {
+      background-color: black;
+      display: inline-block;
+      width: 200px;
+      height: 200px;
+      margin: 10px auto;
+      perspective: 4800px;
+    }
+
+    #container {
+      animation-name: container-spin;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      width: 200px;
+      height: 200px;
+      transform-style: preserve-3d;
+    }
+
+    @keyframes container-spin {
+      from {
+        transform: rotateY(0deg);
+      }
+
+      to {
+        transform: rotateY(360deg);
+      }
+    }
+
+    .panel {
+      background-color: black;
+      border-radius: 20px;
+      height: 40px;
+      left: 50%;
+      margin-left: -20px;
+      margin-top: -20px;
+      position: absolute;
+      top: 50%;
+      transform-style: preserve-3d;
+      width: 40px;
+      background-image: url(world.jpg);
+      background-size: 314.159265359px;
+
+    }
+
+    .panel.red {
+      background-color: red;
+      background-image: url(world.jpg);
+      background-size: 314.159265359px;
+      /* background-position: 0 400px; */
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="sphere">
+    <div id="container"></div>
+  </div>
+
+  <script type="text/javascript">
+    const rad = deg => deg * Math.PI / 180;
+
+    const panelsPerRotation = 10;
+
+    const horizontalSpacing = 180 / panelsPerRotation;
+    const verticalSpacing = 360 / panelsPerRotation;
+
+    const panelSize = 80;
+    const radius = panelSize / 2;
+
+    // Translate out of the screen to sit on the outside of the sphere before
+    // rotating. The rotation will occur relative to the origin of the sphere,
+    // so translating first will make the other positioning work out.
+    const zTranslate = radius / Math.tan(rad(verticalSpacing));
+
+    const container = document.getElementById('container');
+
+    for (let x = 0; x < panelsPerRotation; x += 1) {
+      const rotateX = -90 + (x * horizontalSpacing);
+      const backgroundY = 100 - (100 * x * Math.sin(rad(x * horizontalSpacing / 2)) / panelsPerRotation);
+
+      for (let y = 0; y < panelsPerRotation; y += 1) {
+        const rotateY = y * verticalSpacing;
+        const backgroundX = (100 * y / panelsPerRotation);
+
+        const panel = document.createElement('div');
+
+        panel.setAttribute('class', 'panel');
+        panel.setAttribute('style', `transform: rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(${zTranslate}px); background-position: ${backgroundX}% ${backgroundY}%;`);
+        container.appendChild(panel);
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
